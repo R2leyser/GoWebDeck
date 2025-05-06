@@ -41,22 +41,15 @@ func frontendHandler(w http.ResponseWriter, r *http.Request) {
     w.Header().Set("Content-Type", "text/html")
     w.WriteHeader(http.StatusOK)
 
-    fmt.Fprintln(w, "<!DOCTYPE html>")
-    fmt.Fprintln(w, "<head>")
-    fmt.Fprintln(w, "<link rel=\"stylesheet\" type=\"text/css\" href=\"/static/style.css\">")
-    fmt.Fprintln(w, "</head>")
-    fmt.Fprintln(w, "<html><body>")
-    fmt.Fprintln(w, "<h1>Script Runner</h1>")
-    fmt.Fprintln(w, "<ul>")
+    var buttonBuffer string
 
     for _, script := range scriptMap {
-        fmt.Fprintf(w, "<div class=\"script-button\" data-id=\"%d\">", script.ID)
-        fmt.Fprintf(w, "<p>%s</p>", script.Description)
-        fmt.Fprintf(w, "</div>")
+        buttonBuffer += fmt.Sprintf("<div class=\"script-button\" data-id=\"%d\">", script.ID)
+        buttonBuffer += fmt.Sprintf("<p>%s</p>", script.Description)
+        buttonBuffer += fmt.Sprintf("<p>%s</p>", script.Description)
+        buttonBuffer += fmt.Sprintf("</div>")
     }
 
-    fmt.Fprintln(w, "</body></html>")
-    fmt.Fprintln(w, "<script src=\"/static/index.js\"></script>")
 }
 
 func scriptHandler(w http.ResponseWriter, r *http.Request) {
