@@ -26,13 +26,37 @@ var (
 
 func main() {
 	http.HandleFunc("/scripts/", scriptHandler)
-
-	parseScripts(os.Getenv("HOME") + "/.config/webRun/scripts.json")
+	http.HandleFunc("/", frontendHandler)
+    http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 
 	fmt.Println("Script added:", scriptMap[nextID-1].Path)
 
 	fmt.Println("Server is running at http://localhost:8080")
 	log.Fatal(http.ListenAndServe(":8080", nil))
+}
+
+func frontendHandler(w http.ResponseWriter, r *http.Request) {
+	parseScripts(os.Getenv("HOME") + "/.config/gowebdeck/scripts.json")
+
+    w.Header().Set("Content-Type", "text/html")
+    w.WriteHeader(http.StatusOK)
+
+    fmt.Fprintln(w, "<!DOCTYPE html>")
+    fmt.Fprintln(w, "<head>")
+    fmt.Fprintln(w, "<link rel=\"stylesheet\" type=\"text/css\" href=\"/static/style.css\">")
+    fmt.Fprintln(w, "</head>")
+    fmt.Fprintln(w, "<html><body>")
+    fmt.Fprintln(w, "<h1>Script Runner</h1>")
+    fmt.Fprintln(w, "<ul>")
+
+    for _, script := range scriptMap {
+        fmt.Fprintf(w, "<div class=\"script-button\" data-id=\"%d\">", script.ID)
+        fmt.Fprintf(w, "<p>%s</p>", script.Description)
+        fmt.Fprintf(w, "</div>")
+    }
+
+    fmt.Fprintln(w, "</body></html>")
+    fmt.Fprintln(w, "<script src=\"/static/index.js\"></script>")
 }
 
 func scriptHandler(w http.ResponseWriter, r *http.Request) {

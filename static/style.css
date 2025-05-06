@@ -1,0 +1,14 @@
+:root {
+    background: Black;
+    color: White;
+}
+
+.script-button {
+    padding: 0.5rem;
+    margin: 0.5rem;
+    max-width: 20rem;
+    text-align: center;
+    border-radius: 0.5rem;
+    background: Gray;
+    color: White;
+}
