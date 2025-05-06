@@ -1,21 +1,25 @@
 package main
 
 import (
-    "encoding/json"
-    "fmt"
-    "log"
-    "net/http"
-    "strconv"
-    "sync"
+	"encoding/json"
+	"fmt"
+	"log"
+	"net/http"
+	"os"
+	"os/exec"
+	"strconv"
+	"sync"
 )
 
 type Script struct {
-    ID   int    `json:"id"`
+    ID int `json:"id"`
     Path string `json:"path"`
+    Description string `json:"description"`
+    Icon string `json:"icon"`
 }
 
 var (
-    scripts   = make(map[int]Script)
+    scriptMap   = make(map[int]Script)
     nextID  = 1
     postsMu sync.Mutex
 )
@@ -23,15 +27,12 @@ var (
 func main() {
     http.HandleFunc("/scripts/", scriptHandler)
 
-    scripts[nextID] = Script{ID: nextID, Path: "/path/to/script1"}
-    nextID++
+    parseScripts(os.Getenv("HOME") + "/.config/webRun/scripts.json");
 
-    fmt.Println("Script added:", scripts[nextID-1].Path)
+    fmt.Println("Script added:", scriptMap[nextID-1].Path)
 
     fmt.Println("Server is running at http://localhost:8080")
     log.Fatal(http.ListenAndServe(":8080", nil))
-
-    // Example of adding a script 
 }
 
 func scriptHandler(w http.ResponseWriter, r *http.Request) {
@@ -55,15 +56,14 @@ func handlePostScript(w http.ResponseWriter, r *http.Request, id int) {
     postsMu.Lock()
     defer postsMu.Unlock()
 
-    p, ok := scripts[id]
+    p, ok := scriptMap[id]
     if !ok {
         http.Error(w, "Script not found", http.StatusNotFound)
         return
     }
 
-    fmt.Println("Script ID:", p.ID)
-    w.Header().Set("Content-Type", "application/json")
-    json.NewEncoder(w).Encode("Something")
+    go executeScript(p.Path);
+    http.Error(w, "Script execution started", http.StatusAccepted)
 }
 
 func handleGetScript(w http.ResponseWriter, r *http.Request, id int) {
@@ -73,12 +73,52 @@ func handleGetScript(w http.ResponseWriter, r *http.Request, id int) {
     // If you use a two-value assignment for accessing a
     // value on a map, you get the value first then an
     // "exists" variable.
-    _, ok := scripts[id]
+    _, ok := scriptMap[id]
     if !ok {
         http.Error(w, "Script not found", http.StatusNotFound)
         return
     }
 
-    delete(scripts, id)
+    delete(scriptMap, id)
     w.WriteHeader(http.StatusOK)
 }
+
+func executeScript(path string) {
+    // Simulate script execution
+    // Here you would add the actual script execution logic
+
+    pathFound, err := exec.LookPath(path)
+    if err != nil {
+        fmt.Println("Error finding script:", err)
+        return
+    }
+    cmd := exec.Command(pathFound)
+
+    error := cmd.Run();
+    if error != nil {
+        fmt.Println("Error executing script:", error)
+        return
+    }
+    println("Executing script:", cmd)
+
+    fmt.Println("Executing script:", path)
+    return
+}
+
+func parseScripts(path string) {
+    var scripts []Script
+
+    jsonFile, err := os.ReadFile(path);
+    if  err != nil {
+        panic(err)
+    }
+    
+    if err := json.Unmarshal([]byte(jsonFile), &scripts); err != nil {
+        panic(err)
+    }
+
+    for _, val := range scripts {
+        scriptMap[val.ID] = val
+    }
+}
+
