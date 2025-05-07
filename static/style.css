@@ -3,21 +3,28 @@
     color: White;
 }
 
-ul {
+.gridContainer {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+    grid-template-rows: repeat(auto-fill, minmax(10rem, 1fr));
     gap: 1rem;
     list-style: none;
-    padding: 0;
-    margin: 0;
+    padding: 2rem;
+    margin: auto;
 }
 
 .script-button {
     padding: 0.5rem;
-    margin: 0.5rem;
+    margin-top: auto;
+    margin-bottom: auto;
     max-width: 20rem;
     text-align: center;
+    line-height: 5rem;
     border-radius: 0.5rem;
-    background: Gray;
+    background: Black;
     color: White;
+    border: 2px White;
+    border-style: solid;
+    width: 80%;
+    height: 80%;
 }

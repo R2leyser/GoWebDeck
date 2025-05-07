@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 	"os/exec"
+    "html/template"
 	"strconv"
 	"sync"
 )
@@ -20,6 +21,7 @@ type Script struct {
 
 var (
 	scriptMap = make(map[int]Script)
+	scripts []Script
 	nextID    = 1
 	postsMu   sync.Mutex
 )
@@ -41,14 +43,17 @@ func frontendHandler(w http.ResponseWriter, r *http.Request) {
     w.Header().Set("Content-Type", "text/html")
     w.WriteHeader(http.StatusOK)
 
-    var buttonBuffer string
+	tmplFile := "./static/index.tmpl"
 
-    for _, script := range scriptMap {
-        buttonBuffer += fmt.Sprintf("<div class=\"script-button\" data-id=\"%d\">", script.ID)
-        buttonBuffer += fmt.Sprintf("<p>%s</p>", script.Description)
-        buttonBuffer += fmt.Sprintf("<p>%s</p>", script.Description)
-        buttonBuffer += fmt.Sprintf("</div>")
-    }
+	tmpl, err := template.ParseFiles(tmplFile)
+	if err != nil {
+		panic(err)
+	}
+	err = tmpl.Execute(w, scripts)
+	if err != nil {
+		fmt.Println(err)
+	}
+
 
 }
 
@@ -123,7 +128,6 @@ func executeScript(path string) {
 }
 
 func parseScripts(path string) {
-	var scripts []Script
 
 	jsonFile, err := os.ReadFile(path)
 	if err != nil {
