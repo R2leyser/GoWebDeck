@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+
+<head>
+    <link rel="stylesheet" href="static/style.css">
+    <script src="static/index.js" defer></script>
+</head>
+<body>
+    <div class="layout">
+        <div class="header">
+            <h1>Your Webdeck:</h1>
+        </div>
+        <div class="gridContainer">
+            {{ range . }}
+            <div class="script-button" data-id='{{ .ID }}'>
+                <p>
+                    {{ .Description }}
+                </p>
+            </div>
+            {{ end }}
+        </div>
+        <div class="monitor">
+            <div class="monitor-header">
+                <h2>Servidor</h2>
+                <p id="ram-servidor"></p>
+                <p id="cpu-servidor"></p>
+            </div>
+            <div class="monitor-header">
+                <h2>PC</h2>
+                <p id="ram-pc">100% 16gb/16gb</p>
+                <p id="cpu-pc">100% 16/16</p>
+            </div>
+    </div>
+</body>
