@@ -10,6 +10,7 @@ import (
     "html/template"
 	"strconv"
 	"sync"
+
 )
 
 type Script struct {
@@ -28,7 +29,7 @@ var (
 
 func main() {
 	http.HandleFunc("/scripts/", scriptHandler)
-	http.HandleFunc("/", frontendHandler)
+	http.HandleFunc("/", htmlHandler)
     http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 
 	fmt.Println("Script added:", scriptMap[nextID-1].Path)
@@ -37,7 +38,7 @@ func main() {
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
 
-func frontendHandler(w http.ResponseWriter, r *http.Request) {
+func htmlHandler(w http.ResponseWriter, r *http.Request) {
 	parseScripts(os.Getenv("HOME") + "/.config/gowebdeck/scripts.json")
 
     w.Header().Set("Content-Type", "text/html")
