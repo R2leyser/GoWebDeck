@@ -29,7 +29,7 @@ let i = 0
 function updateRamPc() {
 
     var xhr = new XMLHttpRequest();
-    xhr.open('GET', 'http://192.168.1.102:8000/ram', true);
+    xhr.open('GET', urlPC + '/ram', true);
     
     xhr.onreadystatechange = () => {
         if (xhr.readyState === 4 && xhr.status === 200){
@@ -48,7 +48,7 @@ setInterval(updateRamPc, 1000);
 
 function updateCpuPc() {
     var xhr = new XMLHttpRequest();
-    xhr.open('GET', 'http://192.168.1.102:8000/cpu', true);
+    xhr.open('GET', urlPC + '/cpu', true);
     
     xhr.onreadystatechange = () => {
         if (xhr.readyState == 4 && xhr.status === 200) {
