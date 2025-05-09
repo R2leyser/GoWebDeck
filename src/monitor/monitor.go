@@ -10,8 +10,8 @@ import (
 )
 
 func main () {
-    http.HandleFunc("/ram/", ramMonitorHandler)
-    http.HandleFunc("/cpu/", cpuMonitorHandler)
+    http.HandleFunc("/ram", ramMonitorHandler)
+    http.HandleFunc("/cpu", cpuMonitorHandler)
 
 	fmt.Println("Monitor is running at http://localhost:8000")
 	log.Fatal(http.ListenAndServe(":8000", nil))
@@ -23,19 +23,25 @@ func cpuMonitorHandler(w http.ResponseWriter, r *http.Request) {
         log.Fatal(err)
     }
     w.Header().Set("Content-Type", "application/json")
+    w.Header().Set("Access-Control-Allow-Origin", "*")
+    w.Header().Set("Access-Control-Allow-Methods", "*")
+    w.Header().Set("Access-Control-Allow-Headers", "*")
     w.WriteHeader(http.StatusOK)
-    json.NewEncoder(w).Encode(fmt.Sprintf(`{"percent":%.2f}`, percentages[0]));
+    json.NewEncoder(w).Encode(fmt.Sprintf(`{"porcento":%.2f}`, percentages[0]));
 }
 
 func ramMonitorHandler(w http.ResponseWriter, r *http.Request) {
-    fmt.Println("RAM Monitor")
     virtualMem, err := mem.VirtualMemory()
+
     if err != nil {
         log.Fatal(err)
     }
     w.Header().Set("Content-Type", "application/json")
+    w.Header().Set("Access-Control-Allow-Origin", "*")
+    w.Header().Set("Access-Control-Allow-Methods", "*")
+    w.Header().Set("Access-Control-Allow-Headers", "*")
     w.WriteHeader(http.StatusOK)
-    json.NewEncoder(w).Encode(fmt.Sprintf(`{"percent":%.2f, "mbUsado":%f, "mbTotal":%f}`, 
+    json.NewEncoder(w).Encode(fmt.Sprintf(`{"porcento":%.2f, "mbUsado":%f, "mbTotal":%f}`, 
         virtualMem.UsedPercent, 
         float64(virtualMem.Used)/float64(1000000), 
         float64(virtualMem.Total)/float64(1000000)));

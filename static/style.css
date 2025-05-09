@@ -1,9 +1,9 @@
 
 :root {
     --primary-foreground: #E3E3E3;
-    --primary-background: #233142;
-    --secondary-foreground: #F95959;
-    --secondary-background: #455D7A;
+    --primary-background: #102520;
+    --secondary-foreground: #9989E9;
+    --secondary-background: #203530;
     background: var(--primary-background);
     color: var(--primary-foreground);
 }
@@ -26,18 +26,20 @@ body {
     grid-column: 1 / span 4;
     grid-row: 1;
     padding: 2rem;
+    padding-bottom: 0px;
     max-height: 2rem;
-    margin-bottom: 0rem;
+    margin-bottom: 5rem;
     color: var(--secondary-foreground);
 }
 
 .gridContainer {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
-    grid-template-rows: repeat(auto-fill, minmax(10rem, 1fr));
-    padding: 2rem;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(auto-fill, maxmin(1fr, 10rem));
+    margin: 2rem;
     grid-column: 1 / span 4;
     grid-row: 2;
+    overflow: auto;
 }
 
 .monitor {
