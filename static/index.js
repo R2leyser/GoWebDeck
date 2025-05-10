@@ -22,10 +22,10 @@ const ramPc = document.getElementById('ram-pc');
 const cpuPc = document.getElementById('cpu-pc');
 
 const urlPC = 'http://'+window.location.hostname+':8000'
+const urlServidor = 'http://'+window.location.hostname+':8000/servidor'
 
 var ramObj
 
-let i = 0
 function updateRamPc() {
 
     var xhr = new XMLHttpRequest();
@@ -64,3 +64,43 @@ function updateCpuPc() {
 
 updateCpuPc()
 setInterval(updateCpuPc, 1000);
+
+function updateRamServidor() {
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', urlServidor + '/ram', true);
+    
+    xhr.onreadystatechange = () => {
+        if (xhr.readyState === 4 && xhr.status === 200){
+            ramObj = JSON.parse(JSON.parse(xhr.response))
+            ramServidor.innerText = "RAM: " + ramObj.porcento + "%"
+        } else {
+            ramServidor.innerText = "failed to connect"
+        }
+    }; 
+    
+    xhr.send();
+}
+
+updateRamServidor()
+setInterval(updateRamServidor, 1000);
+
+function updateCpuServidor() {
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', urlServidor + '/cpu', true);
+    
+    xhr.onreadystatechange = () => {
+        if (xhr.readyState == 4 && xhr.status === 200) {
+            cpuObj = JSON.parse(JSON.parse(xhr.response))
+            cpuServidor.innerText = "CPU: " + cpuObj.porcento + "%"
+        } else {
+            cpuServidor.innerText = "failed to connect"
+        }
+    };
+    
+    xhr.send();
+}
+
+updateCpuServidor()
+setInterval(updateCpuServidor, 1000);
+

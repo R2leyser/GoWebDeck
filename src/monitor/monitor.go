@@ -12,6 +12,8 @@ import (
 func main () {
     http.HandleFunc("/ram", ramMonitorHandler)
     http.HandleFunc("/cpu", cpuMonitorHandler)
+    http.HandleFunc("/servidor/ram", servidorRamHandler)
+    http.HandleFunc("/servidor/cpu", servidorCpuHandler)
 
 	fmt.Println("Monitor is running at http://localhost:8000")
 	log.Fatal(http.ListenAndServe(":8000", nil))
@@ -46,5 +48,4 @@ func ramMonitorHandler(w http.ResponseWriter, r *http.Request) {
         float64(virtualMem.Used)/float64(1000000), 
         float64(virtualMem.Total)/float64(1000000)));
 }
-
 

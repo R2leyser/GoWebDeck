@@ -1,10 +1,10 @@
-RunMonitor:
-	go run src/monitor/monitor.go
+runmonitor:
+	go run src/monitor/*.go
 
-RunMain:
-	go run src/main.go
+runmain:
+	go run src/*.go
 
-Run:
-	go run src/monitor/monitor.go &
-	go run src/main.go 
+run:
+	go run src/monitor/*.go &
+	go run src/*.go 
 
