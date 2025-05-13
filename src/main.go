@@ -7,6 +7,7 @@ import (
 	"os"
     "html/template"
 	"sync"
+    "encoding/json"
 )
 
 type Script struct {
@@ -16,8 +17,16 @@ type Script struct {
 	Icon        string `json:"icon"`
 }
 
+type Config struct {
+    PrimaryForegroundColor string   `json:"primary-foreground"`
+    PrimaryBackgroundColor string   `json:"primary-background"`
+    SecondaryForegroundColor string `json:"secondary-foreground"`
+    SecondaryBackgroundColor string `json:"secondary-background"`
+}
+
 var (
 	scriptMap = make(map[int]Script)
+    config Config
 	scripts []Script
 	nextID    = 1
 	postsMu   sync.Mutex
@@ -35,19 +44,45 @@ func main() {
 
 func htmlHandler(w http.ResponseWriter, r *http.Request) {
 	parseScripts(os.Getenv("HOME") + "/.config/gowebdeck/scripts.json")
+	parseConfig(os.Getenv("HOME") + "/.config/gowebdeck/config.json")
 
     w.Header().Set("Content-Type", "text/html")
     w.WriteHeader(http.StatusOK)
 
 	tmplFile := "./static/index.tmpl"
 
+    templateData := struct {
+        Scripts []Script
+        PrimaryForegroundColor string
+        PrimaryBackgroundColor string
+        SecondaryForegroundColor string
+        SecondaryBackgroundColor string
+    }{
+        Scripts: scripts,
+        PrimaryForegroundColor: config.PrimaryForegroundColor,
+        PrimaryBackgroundColor: config.PrimaryBackgroundColor,
+        SecondaryForegroundColor: config.SecondaryForegroundColor,
+        SecondaryBackgroundColor: config.SecondaryBackgroundColor,
+    }
+
 	tmpl, err := template.ParseFiles(tmplFile)
 	if err != nil {
 		panic(err)
 	}
-	err = tmpl.Execute(w, scripts)
+	err = tmpl.Execute(w, templateData)
 	if err != nil {
 		fmt.Println(err)
 	}
 }
 
+func parseConfig(path string) {
+
+	jsonFile, err := os.ReadFile(path)
+	if err != nil {
+		panic(err)
+	}
+
+	if err := json.Unmarshal([]byte(jsonFile), &config); err != nil {
+		panic(err)
+	}
+}

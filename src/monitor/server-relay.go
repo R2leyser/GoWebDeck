@@ -2,45 +2,32 @@ package main
 
 // this is only needed because my server isn't portforwarded or on my network and I don't trust myself
 import (
-	// "fmt"
+	"fmt"
 	"net/http"
-)
-
-var (
-	// serverIP = "http://127.0.0.1:8000"
+    "io"
 )
 
 func servidorRamHandler ( w http.ResponseWriter, r *http.Request) {
-    w.Header().Set("Content-Type", "application/json")
-    w.Header().Set("Access-Control-Allow-Origin", "*")
-    w.Header().Set("Access-Control-Allow-Methods", "*")
-    w.Header().Set("Access-Control-Allow-Headers", "*")
-    w.WriteHeader(http.StatusOK)
-	
+    serverIP := "http://172.26.67.173:8000"
+	serverURL := fmt.Sprintf("%s/ram", serverIP)
 
-	// serverURL := fmt.Sprintf("{}/ram", serverIP)
-	// res, err := http.Get(serverURL)
+	res, err := http.Get(serverURL)
+	if err != nil {
+        fmt.Println("Couldn't connect to server")
+	}
 
-	// if err != nil {
-		
-	// }
-
-
+    io.Copy(w, res.Body)
 }
 
 
 func servidorCpuHandler ( w http.ResponseWriter, r *http.Request) {
-    w.Header().Set("Content-Type", "application/json")
-    w.Header().Set("Access-Control-Allow-Origin", "*")
-    w.Header().Set("Access-Control-Allow-Methods", "*")
-    w.Header().Set("Access-Control-Allow-Headers", "*")
-    w.WriteHeader(http.StatusOK)
+    serverIP := "http://172.26.67.173:8000"
+	serverURL := fmt.Sprintf("%s/cpu", serverIP)
 
-	// serverURL := fmt.Sprintf("{}/cpu", serverIP)
+	res, err := http.Get(serverURL)
+	if err != nil {
+        fmt.Println("Couldn't connect to server")
+	}
 
-	// res, err := http.Get(serverURL)
-	// if err != nil {
-		
-	// }
-	
+    io.Copy(w, res.Body)
 }

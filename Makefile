@@ -8,3 +8,8 @@ run:
 	go run src/monitor/*.go &
 	go run src/*.go 
 
+build:
+	mkdir -p bin
+	go build -o bin/monitor src/monitor/*.go
+	go build -o bin/main src/*.go
+

@@ -1,17 +1,26 @@
 <!DOCTYPE html>
 
-
 <head>
     <link rel="stylesheet" href="static/style.css">
     <script src="static/index.js" defer></script>
 </head>
 <body>
+    <style>
+        :root {
+            --primary-foreground:   {{ .PrimaryForegroundColor   }};
+            --primary-background:   {{ .PrimaryBackgroundColor   }};
+            --secondary-foreground: {{ .SecondaryForegroundColor }};
+            --secondary-background: {{ .SecondaryBackgroundColor }};
+            background: var(--primary-background);
+            color: var(--primary-foreground);
+        }
+    </style>
     <div class="layout">
         <div class="header">
             <h1>Your Webdeck:</h1>
         </div>
         <div class="gridContainer">
-            {{ range . }}
+            {{ range .Scripts }}
             <div class="script-button" data-id='{{ .ID }}'>
                 <p>
                     {{ .Description }}
