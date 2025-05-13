@@ -2,14 +2,14 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
+	"net/http"
 	"os"
 	"os/exec"
-	"net/http"
 	"strconv"
-	"fmt"
 )
 
-func scriptsInit(){
+func scriptsInit() {
 	http.HandleFunc("/scripts/", scriptHandler)
 }
 
@@ -20,7 +20,7 @@ func scriptHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if (r.Method == "POST") {
+	if r.Method == "POST" {
 		handlePostScript(w, r, id)
 	} else {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)

@@ -1,13 +1,13 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
+	"html/template"
 	"log"
 	"net/http"
 	"os"
-    "html/template"
 	"sync"
-    "encoding/json"
 )
 
 type Script struct {
@@ -18,25 +18,25 @@ type Script struct {
 }
 
 type Config struct {
-    PrimaryForegroundColor string   `json:"primary-foreground"`
-    PrimaryBackgroundColor string   `json:"primary-background"`
-    SecondaryForegroundColor string `json:"secondary-foreground"`
-    SecondaryBackgroundColor string `json:"secondary-background"`
+	PrimaryForegroundColor   string `json:"primary-foreground"`
+	PrimaryBackgroundColor   string `json:"primary-background"`
+	SecondaryForegroundColor string `json:"secondary-foreground"`
+	SecondaryBackgroundColor string `json:"secondary-background"`
 }
 
 var (
 	scriptMap = make(map[int]Script)
-    config Config
-	scripts []Script
+	config    Config
+	scripts   []Script
 	nextID    = 1
 	postsMu   sync.Mutex
 )
 
 func main() {
 	http.HandleFunc("/", htmlHandler)
-    http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
+	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 
-	scriptsInit();
+	scriptsInit()
 
 	fmt.Println("Server is running at http://localhost:8080")
 	log.Fatal(http.ListenAndServe(":8080", nil))
@@ -46,24 +46,24 @@ func htmlHandler(w http.ResponseWriter, r *http.Request) {
 	parseScripts(os.Getenv("HOME") + "/.config/gowebdeck/scripts.json")
 	parseConfig(os.Getenv("HOME") + "/.config/gowebdeck/config.json")
 
-    w.Header().Set("Content-Type", "text/html")
-    w.WriteHeader(http.StatusOK)
+	w.Header().Set("Content-Type", "text/html")
+	w.WriteHeader(http.StatusOK)
 
 	tmplFile := "./static/index.tmpl"
 
-    templateData := struct {
-        Scripts []Script
-        PrimaryForegroundColor string
-        PrimaryBackgroundColor string
-        SecondaryForegroundColor string
-        SecondaryBackgroundColor string
-    }{
-        Scripts: scripts,
-        PrimaryForegroundColor: config.PrimaryForegroundColor,
-        PrimaryBackgroundColor: config.PrimaryBackgroundColor,
-        SecondaryForegroundColor: config.SecondaryForegroundColor,
-        SecondaryBackgroundColor: config.SecondaryBackgroundColor,
-    }
+	templateData := struct {
+		Scripts                  []Script
+		PrimaryForegroundColor   string
+		PrimaryBackgroundColor   string
+		SecondaryForegroundColor string
+		SecondaryBackgroundColor string
+	}{
+		Scripts:                  scripts,
+		PrimaryForegroundColor:   config.PrimaryForegroundColor,
+		PrimaryBackgroundColor:   config.PrimaryBackgroundColor,
+		SecondaryForegroundColor: config.SecondaryForegroundColor,
+		SecondaryBackgroundColor: config.SecondaryBackgroundColor,
+	}
 
 	tmpl, err := template.ParseFiles(tmplFile)
 	if err != nil {

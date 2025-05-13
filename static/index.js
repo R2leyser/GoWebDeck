@@ -1,4 +1,4 @@
-const buttons = document.getElementsByClassName('script-button');
+const buttons = document.getElementsByClassName('scrip gbutton');
 
 for (let i = 0; i < buttons.length; i++) {
     buttons.item(i).addEventListener('click', _ => {
@@ -24,6 +24,7 @@ const cpuPc = document.getElementById('cpu-pc');
 const urlPC = 'http://' + window.location.hostname + ':8000'
 const urlServidor = 'http://' + window.location.hostname + ':8000/servidor'
 
+const updateTime = 1000;
 var ramObj
 
 function updateRamPc() {
@@ -44,7 +45,7 @@ function updateRamPc() {
 }
 
 updateRamPc()
-setInterval(updateRamPc, 1000);
+setInterval(updateRamPc, updateTime);
 
 function updateCpuPc() {
     var xhr = new XMLHttpRequest();
@@ -63,7 +64,7 @@ function updateCpuPc() {
 }
 
 updateCpuPc()
-setInterval(updateCpuPc, 1000);
+setInterval(updateCpuPc, updateTime);
 
 let ramObjServidor
 
@@ -85,7 +86,7 @@ function updateRamServidor() {
 }
 
 updateRamServidor()
-setInterval(updateRamServidor, 1000);
+setInterval(updateRamServidor, updateTime);
 
 function updateCpuServidor() {
     var xhr = new XMLHttpRequest();
@@ -104,5 +105,5 @@ function updateCpuServidor() {
 }
 
 updateCpuServidor()
-setInterval(updateCpuServidor, 1000);
+setInterval(updateCpuServidor, updateTime);
 

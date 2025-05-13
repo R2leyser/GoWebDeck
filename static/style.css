@@ -1,12 +1,4 @@
 
-:root {
-    --primary-foreground: #E3E3E3;
-    --primary-background: #102520;
-    --secondary-foreground: #9989E9;
-    --secondary-background: #203530;
-    background: var(--primary-background);
-    color: var(--primary-foreground);
-}
 
 body {
     height: 100vh;
@@ -35,7 +27,8 @@ body {
 .gridContainer {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    grid-template-rows: repeat(auto-fill, maxmin(1fr, 10rem));
+    grid-template-rows: repeat(auto-fill, maxmin(auto, 1fr));
+    grid-gap: 1rem;
     margin: 2rem;
     grid-column: 1 / span 4;
     grid-row: 2;
@@ -65,15 +58,13 @@ body {
 }
 
 .script-button {
-    padding: 0.5rem;
-    margin-top: auto;
-    margin-bottom: auto;
-    max-width: 20rem;
     text-align: center;
-    line-height: 5rem;
     border-radius: 0.5rem;
     background: var(--secondary-background);
     color: var(--primary-foreground);
-    width: 80%;
-    height: 80%;
+    aspect-ratio: 1/1;
+    display: flex;
 }
+
+
+.script-button > p {
