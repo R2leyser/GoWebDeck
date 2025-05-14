@@ -1,4 +1,4 @@
-const buttons = document.getElementsByClassName('scrip gbutton');
+const buttons = document.getElementsByClassName('script-button');
 
 for (let i = 0; i < buttons.length; i++) {
     buttons.item(i).addEventListener('click', _ => {

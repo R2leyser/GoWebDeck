@@ -26,7 +26,7 @@ body {
 
 .gridContainer {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(5, 1fr);
     grid-template-rows: repeat(auto-fill, maxmin(auto, 1fr));
     grid-gap: 1rem;
     margin: 2rem;
@@ -59,6 +59,7 @@ body {
 
 .script-button {
     text-align: center;
+    width: 100%;
     border-radius: 0.5rem;
     background: var(--secondary-background);
     color: var(--primary-foreground);
@@ -68,3 +69,6 @@ body {
 
 
 .script-button > p {
+    margin: auto;
+    display: flex;
+}
