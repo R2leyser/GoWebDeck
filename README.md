@@ -5,7 +5,7 @@ I'm not a web developer, feel free to send pull requests if you find it useful a
 
 ## How to use:
 
-Create a new folder in the .config directory called gowebdeck with a scripts.json in it.
+Create a new folder in the .config directory called gowebdeck with 2 files in it. A `scripts.json` and a `config.json`
 ### Sample scripts.json:
 ```json 
 [
@@ -44,8 +44,18 @@ Create a new folder in the .config directory called gowebdeck with a scripts.jso
     }
 ]
 ```
+### Sample [config.json:](config.json:.md)
+```json
+{
+  "primary-foreground": "#DADADA",
+  "primary-background": "#141B1E",
+  "secondary-foreground": "#6BC568",
+  "secondary-background": "#1B2226"
+}
+```
+
 # TODO:
-- [ ] Add support for more scripting languages
+- [x] Add support for more scripting languages
 - [ ] Add system monitoring scripts
 - [ ] Finish the web interface
 - [ ] Add a way to create new scripts from the web interface (maybe)
