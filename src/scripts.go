@@ -62,6 +62,8 @@ func handlePostScript(w http.ResponseWriter, r *http.Request, id int, on bool, o
 }
 
 func executeScript(path string) {
+    exec.Command("notify-send", "Executing script", path).Run()
+
 	pathFound, err := exec.LookPath(path)
 	if err != nil {
 		fmt.Println("Error finding script:", err)
