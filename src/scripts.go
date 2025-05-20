@@ -15,33 +15,31 @@ func scriptsInit() {
 }
 
 func scriptHandler(w http.ResponseWriter, r *http.Request) {
-	var on = false
-	var off = false
-
-	fmt.Println(r.URL.Path)
-	if strings.Contains(r.URL.Path, "on"){
-		on = true
-	} else if strings.Contains(r.URL.Path, "off") {
-		off = true
-	}
-
-	fmt.Println(r.URL.Path[len("/scripts/"):])
-	id, err := strconv.Atoi(r.URL.Path[len("/scripts/"):])
-	if err != nil {
-		http.Error(w, "Invalid Script ID", http.StatusBadRequest)
-		return
-	}
-
-	fmt.Println(id)
 	if r.Method == "POST" {
-		handlePostScript(w, r, id, on, off)
+		handlePostScript(w, r)
 	} else {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 	}
 }
 
-func handlePostScript(w http.ResponseWriter, r *http.Request, id int, on bool, off bool) {
-	fmt.Println(r.URL.Path)
+func handlePostScript(w http.ResponseWriter, r *http.Request) {
+    // Parse the script ID from the URL, e.g., /scripts/1/on
+    on := strings.Contains(r.URL.Path, "/on")
+    off := strings.Contains(r.URL.Path, "/off")
+
+    idStr := r.URL.Path[len("/scripts/"):]
+    if strings.Contains(idStr, "/on") {
+        idStr = strings.TrimSuffix(idStr, "/on")
+    } else if strings.Contains(idStr, "/off") {
+        idStr = strings.TrimSuffix(idStr, "/off")
+    }
+
+    id, err := strconv.Atoi(idStr)
+    if err != nil {
+        http.Error(w, "Invalid script ID", http.StatusBadRequest)
+        return
+    }
+
 	p, ok := scriptMap[id]
 	if !ok {
 		http.Error(w, "Script not found", http.StatusNotFound)
@@ -51,10 +49,12 @@ func handlePostScript(w http.ResponseWriter, r *http.Request, id int, on bool, o
 	fmt.Println(on)
 	fmt.Println(off)
 
+
+    // fix this
 	if on {
-		fmt.Println("post on")
+		go executeScript(p.Path + "/on")
 	} else if off {
-		fmt.Println("post off")
+		go executeScript(p.Path + "/off")
 	} else {
 		go executeScript(p.Path)
 	}
