@@ -5,7 +5,7 @@ build:
 
 run:
 	go run src/monitor/*.go &
-	go run src/*.go 
+	go run src/*.go
 
 runmonitor:
 	go run src/monitor/*.go

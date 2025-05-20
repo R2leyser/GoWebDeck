@@ -1,18 +1,36 @@
 const buttons = document.getElementsByClassName('script-button');
+let a;
 
 for (let i = 0; i < buttons.length; i++) {
-    buttons.item(i).addEventListener('click', _ => {
-        try {
-            document.getElementsByClassName("layout").item(0).requestFullscreen();
-            console.log(buttons.item(i).getAttribute("data-id"));
-            const response = fetch('/scripts/' + buttons.item(i).getAttribute("data-id"), {
-                method: 'post',
-            });
-            console.log('Completed!', response);
-        } catch (err) {
-            console.error(`Error: ${err}`);
-        }
-    });
+    if (buttons.item(i).classList.contains("toggle")) {
+        buttons.item(i).addEventListener('click', (event) => {
+            event.target.classList.toggle("on");
+            if (event.target.classList.contains("on")){
+                console.log("on")
+                fetch('/scripts/' + event.target.getAttribute("data-id") + "/on", {
+                    method: 'post',
+                });
+            } else {
+                console.log("off")
+                fetch('/scripts/' + event.target.getAttribute("data-id") + "/off", {
+                    method: 'post',
+                });
+            }
+        })
+    } else {
+        buttons.item(i).addEventListener('click', _ => {
+            try {
+                document.getElementsByClassName("layout").item(0).requestFullscreen();
+                console.log(buttons.item(i).getAttribute("data-id"));
+                const response = fetch('/scripts/' + buttons.item(i).getAttribute("data-id"), {
+                    method: 'post',
+                });
+                console.log('Completed!', response);
+            } catch (err) {
+                console.error(`Error: ${err}`);
+            }
+        });
+    }
 }
 
 const ramServidor = document.getElementById('ram-servidor');
@@ -28,7 +46,6 @@ const updateTime = 1000;
 var ramObj
 
 function updateRamPc() {
-
     var xhr = new XMLHttpRequest();
     xhr.open('GET', urlPC + '/ram', true);
 

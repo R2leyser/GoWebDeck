@@ -7,7 +7,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"sync"
 )
 
 type Script struct {
@@ -15,6 +14,7 @@ type Script struct {
 	Path        string `json:"path"`
 	Description string `json:"description"`
 	Icon        string `json:"icon"`
+	Toggle 		bool   `json:"toggle"`
 }
 
 type Config struct {
@@ -24,18 +24,17 @@ type Config struct {
 	SecondaryBackgroundColor string `json:"secondary-background"`
 }
 
+
 var (
 	scriptMap = make(map[int]Script)
 	config    Config
 	scripts   []Script
 	nextID    = 1
-	postsMu   sync.Mutex
 )
 
 func main() {
 	http.HandleFunc("/", htmlHandler)
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
-
 	scriptsInit()
 
 	fmt.Println("Server is running at http://localhost:8080")

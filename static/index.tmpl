@@ -21,7 +21,7 @@
         </div>
         <div class="gridContainer">
             {{ range .Scripts }}
-            <div class="script-button" data-id='{{ .ID }}'>
+            <div class="script-button {{ if eq .Toggle true }} toggle {{ else }} {{ end }}" data-id='{{ .ID }}'>
                 <p>
                     {{ .Description }}
                 </p>

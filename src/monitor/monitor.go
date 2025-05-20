@@ -24,10 +24,8 @@ func cpuMonitorHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	w.Header().Set("Content-Type", "application/json")
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Header().Set("Access-Control-Allow-Methods", "*")
-	w.Header().Set("Access-Control-Allow-Headers", "*")
+
+	makeCrossOrigin(&w)
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(fmt.Sprintf(`{"porcento":%.2f}`, percentages[0]))
 }
@@ -38,13 +36,19 @@ func ramMonitorHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	w.Header().Set("Content-Type", "application/json")
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Header().Set("Access-Control-Allow-Methods", "*")
-	w.Header().Set("Access-Control-Allow-Headers", "*")
+	makeCrossOrigin(&w)
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(fmt.Sprintf(`{"porcento":%.2f, "mbUsado":%f, "mbTotal":%f}`,
 		virtualMem.UsedPercent,
 		float64(virtualMem.Used)/float64(1000000),
 		float64(virtualMem.Total)/float64(1000000)))
 }
+
+func makeCrossOrigin(w *http.ResponseWriter)  {
+	(*w).Header().Set("Content-Type", "application/json")
+	(*w).Header().Set("Access-Control-Allow-Origin", "*")
+	(*w).Header().Set("Access-Control-Allow-Methods", "*")
+	(*w).Header().Set("Access-Control-Allow-Headers", "*")
+}
+
+
